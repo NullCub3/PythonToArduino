@@ -1,7 +1,7 @@
 
 int number = 0;
 int value;
-bool working;
+bool reciving;
 
 void setup() {
   // put your setup code here, to run once:
@@ -17,16 +17,16 @@ void loop() {
   number++;
 
   if (Serial.available()) {
-    working = true;
+    reciving = true;
     value = 0;
-    while (working){
+    while (reciving){
       char ch = Serial.read();
       if (ch >= '0' && ch <= '9') {
         value = (value * 10) + (ch - '0');
         } 
         else if (ch == 10) {
           number = value;
-          working = false;
+          reciving = false;
           Serial.print("Going to: ");
           Serial.println(number);
           delay(250);

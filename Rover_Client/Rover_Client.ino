@@ -5,10 +5,13 @@
 #define in3 7
 #define in4 6
 
-int RightInput = 255;
-int LeftInput = 255;
-int rightSpeed = RightInput;
-int leftSpeed = LeftInput;
+int rightSpeed;
+int leftSpeed;
+bool LeftPos;
+bool RightPos;
+
+bool reciving;
+int value;
 
 
 void setup() {
@@ -19,10 +22,67 @@ void setup() {
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
+
+  Serial.begin(9600);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  if (Serial.available()) {
+    Serial.println("Reciving!");
+    reciving = true;
+    value = 0;
+    LeftPos = true;
+    RightPos = true;
+    
+    while (reciving) {
+      char ch = Serial.read();
+      
+      if (ch >= '0' && ch <= '9') {
+        value = (value * 10) + (ch - '0');
+        }
+        
+      else if (ch == '-') {
+      LeftPos = false;
+      }
+      
+      else if (ch == ' ') {
+        Serial.println(value);
+        Serial.println(LeftPos);
+        if (LeftPos) {
+          leftSpeed = value;
+          }
+        else {
+            leftSpeed = -value;
+            }
+        Serial.println(leftSpeed);   
+        value = 0;
+        while (reciving) {
+          char ch = Serial.read();
+          
+          if (ch >= '0' && ch <= '9') {
+            value = (value * 10) + (ch - '0');
+            }
+          else if (ch == '-') {
+            RightPos = false;
+            }
+          else if (ch == 10) {
+            Serial.println(value);
+            Serial.println(RightPos);
+            if (RightPos) {
+              rightSpeed = value;
+              }
+            else {
+              rightSpeed = -value;
+              }
+              Serial.println(rightSpeed);
+              reciving = false;
+            }
+          }
+        }
+      }
+    }
 
   //Sets Right Motor speeds
   if (rightSpeed > 0){
@@ -45,12 +105,12 @@ void loop() {
   if (leftSpeed > 0){
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
-    analogWrite(enB, rightSpeed);
+    analogWrite(enB, leftSpeed);
     }
    else if (leftSpeed < 0){
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
-    analogWrite(enB, -rightSpeed);
+    analogWrite(enB, -leftSpeed);
     }
     else {
       digitalWrite(in3, LOW);
