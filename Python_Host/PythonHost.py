@@ -9,10 +9,12 @@ if len(pads) == 0:
 maxX = 0
 minX = 0
 
-deadzone = 3500
 max_in = 32768
+deadzone_in = 3500
+
 max_out = 255
 deadzone_out = 0
+
 # rounding = 0
 
 i = 0
@@ -38,11 +40,11 @@ while True:
     for event in events:
         i = 0
         while i <= 3:
-            if event.code == axes[i] and event.state >= deadzone:
-                axes_values[i] = translate(event.state, deadzone, max_in, deadzone_out, max_out)
-            elif event.code == axes[i] and event.state <= -deadzone:
-                axes_values[i] = translate(event.state, -max_in, -deadzone, -max_out, -deadzone_out)
-            elif event.code == axes[i] and deadzone >= event.state >= -deadzone:
+            if event.code == axes[i] and event.state >= deadzone_in:
+                axes_values[i] = translate(event.state, deadzone_in, max_in, deadzone_out, max_out)
+            elif event.code == axes[i] and event.state <= -deadzone_in:
+                axes_values[i] = translate(event.state, -max_in, -deadzone_in, -max_out, -deadzone_out)
+            elif event.code == axes[i] and deadzone_in >= event.state >= -deadzone_in:
                 axes_values[i] = 0
             i += 1
 
