@@ -33,37 +33,11 @@ axes_values = [0, 0, 0, 0]
 while True:
     events = inputs.get_gamepad()
     for event in events:
-
-            i = 0
+        i = 0
+        while i <= 3:
             if event.code == axes[i] and event.state >= deadzone:
                 axes_values[i] = translate_int(event.state, deadzone, 32767, 0, max_out)
             elif event.code == axes[i] and event.state <= -deadzone:
                 axes_values[i] = translate_int(event.state, -32767, deadzone, -max_out, 0)
-
-            i = 1
-            if event.code == axes[i] and event.state >= deadzone:
-                axes_values[i] = translate_int(event.state, deadzone, 32767, 0, max_out)
-            elif event.code == axes[i] and event.state <= -deadzone:
-                axes_values[i] = translate_int(event.state, -32767, deadzone, -max_out, 0)
-
-            i = 2
-            if event.code == axes[i] and event.state >= deadzone:
-                axes_values[i] = translate_int(event.state, deadzone, 32767, 0, max_out)
-            elif event.code == axes[i] and event.state <= -deadzone:
-                axes_values[i] = translate_int(event.state, -32767, deadzone, -max_out, 0)
-
-            i = 3
-            if event.code == axes[i] and event.state >= deadzone:
-                axes_values[i] = translate_int(event.state, deadzone, 32767, 0, max_out)
-            elif event.code == axes[i] and event.state <= -deadzone:
-                axes_values[i] = translate_int(event.state, -32767, deadzone, -max_out, 0)
-
-            print(axes_values)
-    # if event.state > maxX:
-        #     maxX = event.state
-        #
-        # elif event.state < minX:
-        #     minX = event.state
-        #
-        # print("Current Max: " + str(maxX))
-        # print("Current Min: " + str(minX))
+            i += 1
+        print(axes_values)
