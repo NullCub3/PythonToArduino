@@ -15,7 +15,7 @@ deadzone_in = 3500
 max_out = 255
 deadzone_out = 0
 
-# rounding = 0
+rounding = 0
 
 i = 0
 
@@ -32,7 +32,7 @@ def translate(value, left_min, left_max, right_min, right_max):
     value_scaled = float(value - left_min) / float(left_span)
 
     # Convert the 0-1 range into a value in the right range.
-    return round(right_min + (value_scaled * right_span))
+    return round(right_min + (value_scaled * right_span), rounding)
 
 
 while True:
@@ -46,6 +46,9 @@ while True:
                 axes_values[i] = translate(event.state, -max_in, -deadzone_in, -max_out, -deadzone_out)
             elif event.code == axes[i] and deadzone_in >= event.state >= -deadzone_in:
                 axes_values[i] = 0
+
+            if event.code == axes[i] and rounding == 0:
+                axes_values[i] = int(axes_values[i])
             i += 1
 
     print(axes_values)
