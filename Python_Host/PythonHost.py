@@ -1,7 +1,5 @@
 import inputs
 import serial
-import time
-import io
 
 serial_mode = True
 
@@ -10,13 +8,12 @@ pads = inputs.devices.gamepads
 if len(pads) == 0:
     raise Exception("Couldn't find any Gamepads!")
 
-if serial_mode:
-    ser = serial.Serial()
-    ser.baudrate = 9600
-    ser.port = 'COM4'
-    ser.open()
+ser = serial.Serial()
+ser.baudrate = 230400
+ser.port = 'COM4'
+ser.open()
 
-transmit = str()
+transmit = bytes()
 
 maxX = 0
 minX = 0
@@ -63,8 +60,7 @@ while True:
                 axes_values[i] = int(axes_values[i])
             i += 1
 
-    print(axes_values)
-    transmit = str(str(axes_values[1]) + ' ' + str(axes_values[3])).encode()
-    print(transmit)
-    if serial_mode:
+        print(axes_values)
+        transmit = bytes(str(axes_values[1]) + ' ' + str(axes_values[3]) + '\n', 'utf-8')
         ser.write(transmit)
+        print(transmit)

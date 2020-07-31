@@ -23,7 +23,7 @@ void setup() {
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
 
-  Serial.begin(9600);
+  Serial.begin(230400);
 }
 
 void loop() {
