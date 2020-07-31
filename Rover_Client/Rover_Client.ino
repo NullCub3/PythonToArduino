@@ -31,7 +31,7 @@ void loop() {
 
   // Grabs input from the serial port
   if (Serial.available()) { // Checks to see if there is any new serial input
-    Serial.println("Reciving!"); // Debug
+//    Serial.println("Reciving!"); // Debug
 
     // Resetting variables
     reciving = true;
@@ -55,8 +55,8 @@ void loop() {
 
       // If there's a space, then thats the end of the first value for the left side. Applies the value to the motor speed and moves onto the next value.
       else if (ch == ' ') {
-        Serial.println(value); // Debug
-        Serial.println(LeftPos); // Debug
+//        Serial.println(value); // Debug
+//        Serial.println(LeftPos); // Debug
         
         // Makes the value negative if there was a negative sign, and applies it to the motor speed.
         if (LeftPos) {
@@ -65,7 +65,7 @@ void loop() {
         else {
             leftSpeed = -value;
             }
-        Serial.println(leftSpeed); // Debug
+//        Serial.println(leftSpeed); // Debug
         value = 0; // Resets the value
         
         // Loop for the right side, same as above.
@@ -79,15 +79,15 @@ void loop() {
             RightPos = false;
             }
           else if (ch == 10) {
-            Serial.println(value); // Debug
-            Serial.println(RightPos); // Debug
+//            Serial.println(value); // Debug
+//            Serial.println(RightPos); // Debug
             if (RightPos) {
               rightSpeed = value;
               }
             else {
               rightSpeed = -value;
               }
-              Serial.println(rightSpeed); // Debug
+//              Serial.println(rightSpeed); // Debug
               reciving = false; // Breaks the loop.
             }
           }
