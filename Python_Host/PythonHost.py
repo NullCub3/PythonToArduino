@@ -10,7 +10,7 @@ if len(pads) == 0:
 
 ser = serial.Serial()
 ser.baudrate = 230400
-ser.port = 'COM4'
+ser.port = 'COM7'
 ser.open()
 
 transmit = bytes()
