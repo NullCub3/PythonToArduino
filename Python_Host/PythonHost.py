@@ -1,6 +1,8 @@
 import inputs
 import serial
 
+print('Starting!')
+
 serial_mode = True
 
 pads = inputs.devices.gamepads
@@ -8,28 +10,27 @@ pads = inputs.devices.gamepads
 if len(pads) == 0:
     raise Exception("Couldn't find any Gamepads!")
 
+# Serial Settings
 ser = serial.Serial()
 ser.baudrate = 230400
 ser.port = 'COM7'
-ser.open()
-
+# ser.open()
 transmit = bytes()
+send_values = [0, 0]
 
-maxX = 0
-minX = 0
+tankDrive = True
 
-max_in = 32768
-deadzone_in = 3500
+# Axes config
+axes = ['ABS_X', 'ABS_Y', 'ABS_RX', 'ABS_RY']  # Names of axes
+axes_values = [0, 0, 0, 0]  # Stored axes values
 
-max_out = 255
-deadzone_out = 0
+max_in = 32768  # Maximum value of Gamepad
+deadzone_in = 3500  # Minimum value of Gamepad
 
-rounding = 0
+max_out = 255  # Maximum value of stored axes
+deadzone_out = 0  # Minimum value of stored axes
 
-i = 0
-
-axes = ['ABS_X', 'ABS_Y', 'ABS_RX', 'ABS_RY']
-axes_values = [0, 0, 0, 0]
+rounding = 0  # How many decimal places to have
 
 
 def translate(value, left_min, left_max, right_min, right_max):
@@ -44,7 +45,16 @@ def translate(value, left_min, left_max, right_min, right_max):
     return round(right_min + (value_scaled * right_span), rounding)
 
 
-while True:
+def send(send_left, send_right):
+    send_data = bytes(str(send_left) + ' ' + str(send_right) + '\n', 'utf-8')
+    ser.write(send_data)
+
+    # Debug
+    print(send_left, send_right)
+    print(send_data)
+
+
+def get_gamepad():
     events = inputs.get_gamepad()
     for event in events:
         i = 0
@@ -60,7 +70,18 @@ while True:
                 axes_values[i] = int(axes_values[i])
             i += 1
 
-        print(axes_values)
-        transmit = bytes(str(axes_values[1]) + ' ' + str(axes_values[3]) + '\n', 'utf-8')
-        ser.write(transmit)
-        print(transmit)
+
+t = 0
+
+print('Main Loop Running')
+while True:
+
+    t = t + 1
+    if t >= 256:
+        t = 0
+
+    if tankDrive:
+        print('t:' + str(t) + ' L:' + str(axes_values[1]) + ' R:' + str(axes_values[3]))
+        # send(axes_values[1], axes_values[3])
+
+    get_gamepad()
