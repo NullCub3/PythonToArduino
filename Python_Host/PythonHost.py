@@ -1,9 +1,11 @@
+import time
+import logging
 import inputs
 import serial
 
 print('Starting!')
 
-serial_mode = True
+serial_mode = False
 
 pads = inputs.devices.gamepads
 
@@ -14,7 +16,8 @@ if len(pads) == 0:
 ser = serial.Serial()
 ser.baudrate = 230400
 ser.port = 'COM7'
-# ser.open()
+if serial_mode:
+    ser.open()
 transmit = bytes()
 send_values = [0, 0]
 
@@ -47,10 +50,11 @@ def translate(value, left_min, left_max, right_min, right_max):
 
 def send(send_left, send_right):
     send_data = bytes(str(send_left) + ' ' + str(send_right) + '\n', 'utf-8')
-    ser.write(send_data)
+    if serial_mode:
+        ser.write(send_data)
 
     # Debug
-    print(send_left, send_right)
+    # print(send_left, send_right)
     print(send_data)
 
 
@@ -75,13 +79,12 @@ t = 0
 
 print('Main Loop Running')
 while True:
-
+    print(str(t) + str(axes_values))
     t = t + 1
     if t >= 256:
         t = 0
 
     if tankDrive:
-        print('t:' + str(t) + ' L:' + str(axes_values[1]) + ' R:' + str(axes_values[3]))
-        # send(axes_values[1], axes_values[3])
-
+        send(axes_values[1], axes_values[3])
     get_gamepad()
+
